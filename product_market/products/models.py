@@ -48,7 +48,7 @@ class Product(models.Model):
         'Слаг продукта',
         max_length=256,
     )
-    category = models.ForeignKey(
+    sub_category = models.ForeignKey(
         Category,
         verbose_name='Категория товара',
         related_name='product',
@@ -65,6 +65,11 @@ class Product(models.Model):
     image_low = models.ImageField(
         'Картинка товара в низком разрешении',
         upload_to='product_images/low',
+    )
+    price = models.DecimalField(
+        'Цена продукта',
+        max_digits=10,
+        decimal_places=2,
     )
 
     def __str__(self) -> str:
