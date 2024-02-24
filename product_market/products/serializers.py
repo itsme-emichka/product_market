@@ -34,6 +34,7 @@ class CategorySerializer(ModelSerializer):
 class ProductSerializer(ModelSerializer):
     sub_category = serializers.StringRelatedField(read_only=True)
     category = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -43,9 +44,7 @@ class ProductSerializer(ModelSerializer):
             'slug',
             'category',
             'sub_category',
-            'image_large',
-            'image_medium',
-            'image_low',
+            'images',
             'price',
         )
 
@@ -54,3 +53,12 @@ class ProductSerializer(ModelSerializer):
         if parent:
             return parent.name
         return None
+
+    def get_images(self, obj: Product) -> list[str]:
+        # Более удобный вариант выдачи изображений.
+        # return {
+        #     'image_large': obj.image_large.url,
+        #     'image_medium': obj.image_medium.url,
+        #     'image_low': obj.image_low.url,
+        # }
+        return [obj.image_large.url, obj.image_medium.url, obj.image_low.url]
