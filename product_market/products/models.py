@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+DEFAULT_PRODUCT_AMOUNT: int = 1
+
 
 class Category(models.Model):
     name = models.CharField(
@@ -91,6 +93,10 @@ class Cart(models.Model):
         verbose_name='Продукт',
         related_name='cart',
         on_delete=models.CASCADE,
+    )
+    amount = models.PositiveIntegerField(
+        'Количество продукта в корзине',
+        default=DEFAULT_PRODUCT_AMOUNT,
     )
 
     def __str__(self) -> str:
