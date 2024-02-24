@@ -19,8 +19,6 @@ def add_product_to_cart(
         user: User_model,
         product_id: int,
         amount: int = 1) -> Cart:
-    if not isinstance(amount, int):
-        amount = 1
     product = get_object_or_404(Product, id=product_id)
     try:
         cart_position: Cart = get_object_or_404(
@@ -42,3 +40,13 @@ def add_product_to_cart(
 
 def delete_product_from_cart(user: User_model, product_id: int) -> None:
     get_object_or_404(Cart, user=user, product_id=product_id).delete()
+
+
+def edit_product_amount(
+        user: User_model,
+        product_id: int,
+        amount: int) -> Cart:
+    cart_position = get_object_or_404(Cart, user=user, product_id=product_id)
+    cart_position.amount = amount
+    cart_position.save()
+    return cart_position

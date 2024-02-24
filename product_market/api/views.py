@@ -13,7 +13,8 @@ from products.serializers import ProductSerializer, CategorySerializer
 from api.services import (
     get_all_objects,
     add_product_to_cart,
-    delete_product_from_cart
+    delete_product_from_cart,
+    edit_product_amount,
 )
 from api.utils import get_category_parent_and_children
 
@@ -52,12 +53,33 @@ class ProductViewSet(ListModelMixin,
         if request.method == HTTPMethod.DELETE:
             delete_product_from_cart(request.user, pk)
             return Response(
-                {'detail': 'Удалено'},
+                {'detail': 'Товар удален'},
                 status=status.HTTP_204_NO_CONTENT,
             )
 
-        else:
-            pass
+        if request.method == HTTPMethod.PATCH:
+            amount: str = self.request.query_params.get('amount', None)
+            if not amount:
+                return Response(
+                    {'detail': 'Введите количество в параметрах запроса'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if not amount.isdigit():
+                return Response(
+                    {'detail': 'Количество должно быть числом'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            cart_position = edit_product_amount(
+                request.user,
+                pk,
+                int(amount)
+            )
+            return Response(
+                {'detail': (
+                    'Количество обновлено. ' +
+                    f'Сейчас в корзине {cart_position.amount}')},
+                status=status.HTTP_200_OK,
+            )
 
 
 class CategoryViewSet(ListModelMixin,
