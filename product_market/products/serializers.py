@@ -62,3 +62,12 @@ class ProductSerializer(ModelSerializer):
         #     'image_low': obj.image_low.url,
         # }
         return [obj.image_large.url, obj.image_medium.url, obj.image_low.url]
+
+
+class ProductCartSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        return {
+            **ProductSerializer(instance.product).data,
+            'amount': instance.amount,
+            'final_price': instance.product.price * instance.amount
+        }

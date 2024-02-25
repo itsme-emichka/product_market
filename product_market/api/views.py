@@ -9,14 +9,23 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 from products.models import Product, Category
-from products.serializers import ProductSerializer, CategorySerializer
+from products.serializers import (
+    ProductSerializer,
+    CategorySerializer,
+    ProductCartSerializer
+)
 from api.services import (
     get_all_objects,
     add_product_to_cart,
     delete_product_from_cart,
     edit_product_amount,
+    get_user_cart,
+    clean_user_cart,
 )
-from api.utils import get_category_parent_and_children
+from api.utils import (
+    get_category_parent_and_children,
+    get_total_amount_and_price
+)
 
 
 class ProductViewSet(ListModelMixin,
@@ -99,3 +108,34 @@ class CategoryViewSet(ListModelMixin,
         context[
             'category_parents_children'] = self.category_parent_and_children[1]
         return context
+
+
+class CartViewSet(ListModelMixin,
+                  GenericViewSet):
+    serializer_class = ProductCartSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return get_user_cart(user=self.request.user)
+
+    def list(self, request: Request, *args, **kwargs):
+        queryset = self.get_queryset()
+        if not queryset:
+            return Response(
+                {'detail': 'Корзина пуста'},
+                status=status.HTTP_204_NO_CONTENT
+            )
+        serializer: ProductCartSerializer = self.get_serializer_class()
+        total_amount, total_price = get_total_amount_and_price(queryset)
+        return Response(
+            {
+                'total_amount': total_amount,
+                'total_price': total_price,
+                'products': serializer(queryset, many=True).data,
+            }
+        )
+
+    @action(methods=('post',), detail=False)
+    def clean(self, request: Request, pk=None):
+        clean_user_cart(request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)

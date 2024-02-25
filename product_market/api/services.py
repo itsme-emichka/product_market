@@ -50,3 +50,11 @@ def edit_product_amount(
     cart_position.amount = amount
     cart_position.save()
     return cart_position
+
+
+def get_user_cart(user: User_model) -> QuerySet:
+    return Cart.objects.select_related('product').filter(user=user)
+
+
+def clean_user_cart(user: User_model) -> None:
+    Cart.objects.filter(user=user).delete()
