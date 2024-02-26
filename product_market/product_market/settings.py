@@ -5,7 +5,7 @@ import environ
 
 env = environ.Env(
     DEBUG=(bool, True),
-    SECRET_KEY=(str, '')
+    SECRET_KEY=(str, 'django-insecure-hfwgb0fts*8+kj%hqs1gj6ni!=x4s+gg1aqj=1$3*1!uro(d&4')
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent

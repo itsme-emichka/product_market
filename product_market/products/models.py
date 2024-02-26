@@ -78,7 +78,7 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('-id',)
 
 
 class Cart(models.Model):
@@ -103,4 +103,4 @@ class Cart(models.Model):
         return f'{self.user.username} — {self.product.name}'
 
     class Meta:
-        ordering = ('user',)
+        ordering = ('-id',)

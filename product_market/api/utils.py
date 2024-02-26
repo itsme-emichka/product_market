@@ -28,5 +28,5 @@ def get_total_amount_and_price(cart_queryset: QuerySet) -> list[int]:
     total_price = 0
     for obj in cart_queryset:
         total_amount += obj.amount
-        total_price += obj.product.price
+        total_price += obj.product.price * obj.amount
     return total_amount, total_price
