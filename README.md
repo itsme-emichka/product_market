@@ -24,6 +24,7 @@
   "password": "str"
 }
 ```
+*Для использования Токена добавьте заголовок Authorization к запросу в формате `Authorization: Token <your token>`*
 
 ### Стек технологий
 - Django
