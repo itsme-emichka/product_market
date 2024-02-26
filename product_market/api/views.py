@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 from products.models import Product, Category
 from products.serializers import (
@@ -108,6 +109,14 @@ class CategoryViewSet(ListModelMixin,
         context[
             'category_parents_children'] = self.category_parent_and_children[1]
         return context
+
+    def retrieve(self, request, *args, **kwargs):
+        serializer = self.get_serializer_class()
+        serializer = serializer(
+            get_object_or_404(Category, id=kwargs.get('pk')),
+            context=self.get_serializer_context(),
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CartViewSet(ListModelMixin,
