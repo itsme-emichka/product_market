@@ -6,8 +6,8 @@
 `GET` `api/product/` — Получение всех продуктов   
 `GET` `api/product/<int:id>/` — Получение продукта по id  
 
-`POST` `DELETE` `api/product/<int:id>/cart/` — Добавление 1 продукта в корзину / Удаление продукта из корзины  
-`POST` `PATCH` `api/product/<int:id>/cart/?amount=<int:id>` — Добавление продукта в указанном количестве / Изменение количества продукта в корзине  
+`POST` / `DELETE` `api/product/<int:id>/cart/` — Добавление 1 продукта в корзину / Удаление продукта из корзины  
+`POST` / `PATCH` `api/product/<int:id>/cart/?amount=<int:id>` — Добавление продукта в указанном количестве / Изменение количества продукта в корзине  
 
 `GET` `api/cart/` — Получение содержимого корзины  
 `POST` `api/cart/clean/` — Очистка корзины  
